@@ -21,8 +21,6 @@ import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
-
-//Testes unitários das requisições
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CarrosApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CarrosApiTests {
@@ -34,11 +32,11 @@ public class CarrosApiTests {
 
     private ResponseEntity<CarroDTO> getCarro(String url) {
         return
-                rest.withBasicAuth("user","user").getForEntity(url, CarroDTO.class);
+                rest.withBasicAuth("user","123").getForEntity(url, CarroDTO.class);
     }
 
     private ResponseEntity<List<CarroDTO>> getCarros(String url) {
-        return rest.withBasicAuth("user","user").exchange(
+        return rest.withBasicAuth("user","123").exchange(
                 url,
                 HttpMethod.GET,
                 null,
@@ -55,7 +53,7 @@ public class CarrosApiTests {
         carro.setTipo("esportivos");
 
         // Insert
-        ResponseEntity response = rest.withBasicAuth("admin","admin").postForEntity("/api/v1/carros", carro, null);
+        ResponseEntity response = rest.withBasicAuth("admin","123").postForEntity("/api/v1/carros", carro, null);
         System.out.println(response);
 
         // Verifica se criou
@@ -70,7 +68,7 @@ public class CarrosApiTests {
         assertEquals("esportivos", c.getTipo());
 
         // Deletar o objeto
-        rest.withBasicAuth("admin","admin").delete(location);
+        rest.withBasicAuth("user","123").delete(location);
 
         // Verificar se deletou
         assertEquals(HttpStatus.NOT_FOUND, getCarro(location).getStatusCode());
