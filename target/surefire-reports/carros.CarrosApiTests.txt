@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: carros.CarrosApiTests
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 16.765 s <<< FAILURE! - in carros.CarrosApiTests
+testGetNotFound(carros.CarrosApiTests)  Time elapsed: 0.692 s  <<< FAILURE!
+junit.framework.AssertionFailedError: expected:<405 METHOD_NOT_ALLOWED> but was:<404 NOT_FOUND>
+	at carros.CarrosApiTests.testGetNotFound(CarrosApiTests.java:108)
+
+testGetOk(carros.CarrosApiTests)  Time elapsed: 0.109 s  <<< FAILURE!
+junit.framework.AssertionFailedError: expected:<405 METHOD_NOT_ALLOWED> but was:<200 OK>
+	at carros.CarrosApiTests.testGetOk(CarrosApiTests.java:98)
+
+testSave(carros.CarrosApiTests)  Time elapsed: 0.361 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "java.util.List.get(int)" because the return value of "org.springframework.http.HttpHeaders.get(Object)" is null
+	at carros.CarrosApiTests.testSave(CarrosApiTests.java:63)
+
+testListaPorTipo(carros.CarrosApiTests)  Time elapsed: 0.226 s  <<< FAILURE!
+junit.framework.AssertionFailedError: expected:<10> but was:<11>
+	at carros.CarrosApiTests.testListaPorTipo(CarrosApiTests.java:88)
+
