@@ -3,9 +3,9 @@ package domain;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,57 +17,49 @@ import org.springframework.web.bind.annotation.RestController;
 
 import domain.CarrosService;
 
+//Controla as requisições
 @RestController
 @RequestMapping("/api/v1/carros")
-public class CarrosController {	
-	
+public class CarrosController {
+
 	@Autowired
 	private CarrosService service;
-	
-	
+
 	@GetMapping()
 	public ResponseEntity<List<CarroDTO>> get() {
 		return ResponseEntity.ok(service.getCarros());
-	//	return new ResponseEntity<>(service.getCarros(), HttpStatus.OK);
 	}
 
-	@GetMapping("/id/{id}")	
+	@GetMapping("/id/{id}")
 	public ResponseEntity get(@PathVariable("id") Long id) {
-		Optional<Carro> carro = service.getCarrosbyId(id);
-		
-		if(carro.isPresent()) {
-			return ResponseEntity.ok(carro.get());
-		}else{
-			return ResponseEntity.notFound().build();
-
-		}
-				
+		CarroDTO carro = service.getCarroById(id);
+		return ResponseEntity.ok(carro);
 	}
-	
-	@GetMapping("/tipo/{tipo}")	
+
+	@GetMapping("/tipo/{tipo}")
 	public ResponseEntity<List<CarroDTO>> getCarrosbyTipo(@PathVariable("tipo") String tipo) {
 		List<CarroDTO> carros = service.getCarrosbyTipo(tipo);
 
-		if(carros.isEmpty()) {
+		if (carros.isEmpty()) {
 			return ResponseEntity.noContent().build();
-		}else{
+		} else {
 			return ResponseEntity.ok(carros);
 
 		}
 	}
-	
+
 	@PostMapping
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity post(@RequestBody Carro carro) {
-		
-		try {
-			Carro c =  service.insert(carro);			
+
+//		try {
+		CarroDTO c = service.insert(carro);
 //			URI location = getUri(c.getId());
-			return ResponseEntity.created(null).build();
-		} catch (Exception ex) {
-			return ResponseEntity.badRequest().build();
-		}
-}
-	
+		return ResponseEntity.created(null).build();
+//		} catch (Exception ex) {
+//			return ResponseEntity.badRequest().build();
+//		}
+	}
 
 //	private URI getUri(Long id) {
 //		return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -75,10 +67,11 @@ public class CarrosController {
 //	}
 
 	@PutMapping("/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity put(@PathVariable("id") Long id, @RequestBody Carro carro) {
-		
+
 		try {
-			Carro c =  service.update(carro, id);			
+			CarroDTO c = service.update(carro, id);
 //			URL location = getUrl(c.getId());
 			return ResponseEntity.ok(c);
 
@@ -86,19 +79,13 @@ public class CarrosController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity delete(@PathVariable("id") Long id) {
-		boolean ok = service.delete(id); 
-		
-		if (ok) {	
-			return ResponseEntity.ok().build();
 
-		}else{
-			return ResponseEntity.notFound().build();
-		}
+	@DeleteMapping("/{id}")
+	@Secured({ "ROLE_ADMIN" })
+	public ResponseEntity delete(@PathVariable("id") Long id) {
+		service.delete(id);
+		return ResponseEntity.ok().build();
+
 	}
-		
-	
+
 }
